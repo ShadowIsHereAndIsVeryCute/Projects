@@ -11,6 +11,10 @@ class Button(CTkButton):
                          text_color=COLORS[color]['text'],
                          command = func)
         self.grid(column = col, row = row, sticky = 'nesw', padx = STYLING['gap'], pady = STYLING['gap'])
+
+class NumButton(Button)
+    def __init__(self):
+
 class ImageButton(CTkButton):
     def __init__(self, parent, func, col, row, image,text = '',color = 'dark-gray'):
         super().__init__(
