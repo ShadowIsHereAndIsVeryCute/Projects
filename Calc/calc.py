@@ -59,13 +59,45 @@ class calc(ctk.CTk):
                     col=OPERATORS['invert']['col'],
                     row=OPERATORS['invert']['row']
                     )
-
+        for num, data in NUM_POSITIONS.items():
+            NumButton(
+                parent=self,
+                text=num,
+                func=self.num_press,
+                col=data['col'],
+                row=data['row'],
+                font=main_font,
+                span=data['span'])
+        for operator, data in MATH_POSITIONS.items():
+            if data['image path']:
+                divi = ctk.CTkImage(
+                    light_image= Image.open(data['image path']['dark']),
+                    dark_image = Image.open(data['image path']['light'])
+                )
+                mathimagebutton(self,
+                                operator = operator,
+                                func = self.mathpress,
+                                col = data['col'],
+                                row = data['row'],
+                                image = divi)
+            else:
+                MathButton(self,
+                        font = main_font,
+                        text = data['character'],
+                        operator = operator,
+                        func = self.mathpress,
+                        col = data['col'],
+                        row = data['row'])
+    def num_press(self, value):
+        print(value)
     def clear(self):
         print('clear')
     def percent(self):
         print('percent')
     def invert(self):
         print("invert")
+    def mathpress(self, value):
+        print(value)
 class out_label(ctk.CTkLabel):
     def __init__(self, parent, row, sticky, font, string_var):
         super().__init__(parent, font = font, textvariable = string_var)
