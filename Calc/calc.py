@@ -25,6 +25,8 @@ class calc(ctk.CTk):
 
         self.result_string = ctk.StringVar(value = '0')
         self.formula_string = ctk.StringVar(value = '')
+        self.display_nums = []
+        self.full_operation = []
 
         self.create_widgets()
 
@@ -89,15 +91,59 @@ class calc(ctk.CTk):
                         col = data['col'],
                         row = data['row'])
     def num_press(self, value):
-        print(value)
+        self.display_nums.append(str(value))
+        full_num = ''.join(self.display_nums)
+        self.result_string.set(full_num)
     def clear(self):
-        print('clear')
+        self.result_string.set(0)
+        self.formula_string.set('')
+
+        self.display_nums.clear()
+        self.full_operation.clear()
     def percent(self):
-        print('percent')
+        if self.display_nums:
+            current_number = float(''.join(self.display_nums))
+            prec_number = current_number / 100
+
+            self.display_nums = list(str(prec_number))
+            self.result_string.set(''.join(self.display_nums))
     def invert(self):
-        print("invert")
+        current_number = ''.join(self.display_nums)
+        if current_number:
+            if float(current_number) > 0:
+                self.display_nums.insert(0,  '-')
+            else:
+                del self.display_nums[0]
+
+            self.result_string.set(''.join(self.display_nums))
+
     def mathpress(self, value):
-        print(value)
+        current_num = ''.join(self.display_nums)
+
+        if current_num:
+            self.full_operation.append(current_num)
+
+            if value != '=':
+                self.full_operation.append(value)
+                self.display_nums.clear()
+                self.result_string.set('')
+                self.formula_string.set(' '.join(self.full_operation))
+
+            else:
+                formula = ' '.join(self.full_operation)
+                result = eval(formula)
+
+                if isinstance(result, float):
+                    if result.is_integer():
+                        result = int(result)
+                    else:
+                        result = round(result, 5)
+                self.full_operation.clear()
+                self.display_nums = [str(result)]
+
+                self.result_string.set(result)
+                self.formula_string.set(formula)
+
 class out_label(ctk.CTkLabel):
     def __init__(self, parent, row, sticky, font, string_var):
         super().__init__(parent, font = font, textvariable = string_var)
